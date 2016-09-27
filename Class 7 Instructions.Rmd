@@ -135,8 +135,8 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-plot (merge$`mean(m_active_time)`, merge$`mean(motivation)`, xlab="Average Instructor Active Time by Week", ylab = "Average Student Motivation by Week", main = "Relationship between Active Time \n and Motivation")
-cor.test(merge$`mean(m_active_time)`,merge$`mean(motivation)`)
+plot (merge$`mean(motivation)`, merge$`mean(m_active_time)`, ylab="Average Instructor Active Time by Week", xlab = "Average Student Motivation by Week", main = "Relationship between Motivation \n and Active Time")
+cor.test(merge$`mean(motivation)`, merge$`mean(m_active_time)`)
 ```
 
 Finally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
