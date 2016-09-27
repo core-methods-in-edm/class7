@@ -75,7 +75,7 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
-student_wide <- spread(student_activity, variable, measure)
+student_table4 <- dplyr::filter(student_wide, table == 4)
 ```
 
 ##Make a new variable
