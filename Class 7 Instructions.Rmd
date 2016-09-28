@@ -3,7 +3,6 @@
 title: "Assignment 3"
 author: "Charles Lang"
 date: "February 13, 2016"
-runtime: shiny
 ---
 ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
 
@@ -20,7 +19,7 @@ library(tidyr, dplyr)
 
 ##Upload wide format instructor data (instructor_activity_wide.csv)
 ```{r}
-data_wide <- read.table("~/Documents/EDM/class7/instructor_activity_wide.csv", sep = ",", header = TRUE)
+data_wide <- read.table("~/class7/instructor_activity_wide.csv", sep = ",", header = TRUE)
 
 #Now view the data you have uploaded and notice how its structure: each variable is a date and each row is a type of measure.
 View(data_wide)
@@ -61,7 +60,7 @@ instructor_data <- spread(data_long, variables, measure)
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
-data_student <- read.table("~/Documents/EDM/class7/student_activity.csv", sep = ",", header = TRUE)
+data_student <- read.table("~/class7/student_activity.csv", sep = ",", header = TRUE)
 student_data <- spread(data_student, variable, measure)
 View(student_data)
 ```
@@ -135,9 +134,11 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 ##Visualize
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
-```{r echo = FALSE}
+
+
+```{r}
 z <- dplyr::select(merge, -week)
-Plot(z)
+plot(z)
 
 a <- dplyr::select(z, 1)
 aa <-t(a)
@@ -147,5 +148,19 @@ bb <-t(b)
 cor.test(aa,bb)
 
 ```
+
+##visualization result
+
+image: ![](Rplot.png)
+
+Pearson's product-moment correlation
+
+data:  aa and bb
+## t = -2.0734, df = 1, p-value = 0.2861 (not significant correlation)
+alternative hypothesis: true correlation is not equal to 0
+sample estimates:
+       cor 
+-0.9007108 
+
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
