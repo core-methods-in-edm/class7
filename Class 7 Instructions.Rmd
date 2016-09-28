@@ -3,7 +3,7 @@
 title: "Assignment 3"
 author: "Charles Lang"
 date: "February 13, 2016"
-##runtime: shiny
+runtime: shiny
 ---
 ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
 
