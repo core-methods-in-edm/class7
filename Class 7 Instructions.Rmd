@@ -135,7 +135,7 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 ##Visualize
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
-```{r}
+```{r echo = FALSE}
 z <- dplyr::select(merge, -week)
 Plot(z)
 
