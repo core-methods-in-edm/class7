@@ -2,6 +2,7 @@
 title: "Assignment 3"
 author: "Charles Lang"
 date: "February 13, 2016"
+output: html_document
 ---
 ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
 
@@ -10,15 +11,15 @@ date: "February 13, 2016"
 ##Install packages for manipulating data
 We will use two packages: tidyr and dplyr
 ```{r}
-#Insall packages
-install.packages("tidyr", "dplyr")
+
 #Load packages
 library(tidyr, dplyr)
+
 ```
 
 ##Upload wide format instructor data (instructor_activity_wide.csv)
 ```{r}
-data_wide <- read.table("~/Documents/NYU/EDCT2550/Assignments/Assignment 3/instructor_activity_wide.csv", sep = ",", header = TRUE)
+data_wide <- read.table("~/Desktop/FALL_2016/Class7/instructor_activity_wide.csv", sep = ",", header = TRUE)
 
 #Now view the data you have uploaded and notice how its structure: each variable is a date and each row is a type of measure.
 View(data_wide)
@@ -117,8 +118,8 @@ student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
 Create two new data sets using this method. One that sumarizes average motivation for students for each week (student_week) and another than sumarizes "m_active_time" for the instructor per week (instructor_week). Write your code in the following chunk:
 
 ```{r}
-Student_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
-instructor_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
+Student_week %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
+instructor_week %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
 ```
 
 ##Merging
@@ -132,10 +133,10 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-> plot(student_week,instructor_week)
-> x <- c(1,2,3)
-> y <- c(6913.25, 6240.28571428571,5956.14285714286)
-> cor.test(x,y)
+ plot(student_week,instructor_week)
+ x <- c(1,2,3)
+ y <- c(6913.25, 6240.28571428571,5956.14285714286)
+ cor.test(x,y)
 ```
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
