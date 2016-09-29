@@ -59,7 +59,7 @@ instructor_data <- spread(data_long, variables, measure)
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
-
+ newstud<-spread(student_data,variable,measure)
 ```
 
 ##Now that you have workable student data set, subset it to create a data set that only includes data from the second class. 
@@ -75,7 +75,7 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
-
+student_tab4<-dplyr::filter(student_data_2,table==4)
 ```
 
 ##Make a new variable
