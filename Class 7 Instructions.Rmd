@@ -1,7 +1,7 @@
 ---
 title: "Assignment 3"
-author: "Charles Lang"
-date: "February 13, 2016"
+author: "Sam Pepe"
+date: "September 28 2016"
 ---
 ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
 
@@ -133,7 +133,9 @@ Visualize the relationship between these two variables (mean motivation and mean
 
 ```{r}
 plot(instructor_week,student_week)
-cor.test(
+ins<-subset(instructor_week,select=-week)
+stu<-subset(student_week,select=-week)
+cor(ins,stu,method="pearson")
 ```
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
