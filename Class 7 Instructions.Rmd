@@ -18,7 +18,7 @@ library(tidyr, dplyr)
 
 ##Upload wide format instructor data (instructor_activity_wide.csv)
 ```{r}
-data_wide <- read.table("~/Documents/NYU/EDCT2550/Assignments/Assignment 3/instructor_activity_wide.csv", sep = ",", header = TRUE)
+data_wide <- read.table<- read.table("/Users/MissVic/Documents/VLB SCHOOL - ALL/TC.CU.2015-16/Learning Analytics FALL2016/Projects/class7/instructor_activity_wide.csv",sep = ",", header = TRUE)
 
 #Now view the data you have uploaded and notice how its structure: each variable is a date and each row is a type of measure.
 View(data_wide)
@@ -59,7 +59,8 @@ instructor_data <- spread(data_long, variables, measure)
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
-
+student <- read.table<- read.table("/Users/MissVic/Documents/VLB SCHOOL - ALL/TC.CU.2015-16/Learning Analytics FALL2016/Projects/class7/student_activity.csv",sep = ",", header = TRUE)
+student_data <- spread(student,  variable, measure)
 ```
 
 ##Now that you have workable student data set, subset it to create a data set that only includes data from the second class. 
