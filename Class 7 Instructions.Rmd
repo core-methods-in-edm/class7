@@ -60,7 +60,7 @@ instructor_data <- spread(data_long, variables, measure)
 
 ```{r}
 student_data <- read.table("~/Desktop/HUDK4050 Core mthds educ dara mining/RSTUDIO/CLASS 7/student_activity.csv", sep = ",", header = TRUE)
-
+student_data<- spread(student_data, variable, measure)
 ```
 
 ##Now that you have workable student data set, subset it to create a data set that only includes data from the second class. 
@@ -76,8 +76,7 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
-student_activity_wide<- spread(student_data, variable, measure)
-student_t4<-dplyr::filter(student_activity_wide, table == 4)
+student_t4<-dplyr::filter(student_data, table == 4)
 
 ```
 
@@ -103,7 +102,7 @@ instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
 
 Create the same variables for the student data frame, write your code in the code chunk below:
 ```{r}
-student_data <- dplyr::mutate(student_activity_wide, week = dplyr::ntile(date, 3))
+student_data <- dplyr::mutate(student_data, week = dplyr::ntile(date, 3))
 ```
 
 ##Sumaraizing
@@ -135,10 +134,10 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-plot(instructor_week,student_week)
-a <- as.numeric(unlist(instructor_week[,2]))
-b <- as.numeric(unlist(student_week[,2]))
-cor.test(a,b)
+
+plot(merge$`mean(motivation)`,merge$`mean(m_active_time)`)
+
+cor.test(merge$`mean(motivation)`,merge$`mean(m_active_time)`)
 ```
 
 finally save your markdown document and your plot to this folder and commit,push and pull your repo to submit.
