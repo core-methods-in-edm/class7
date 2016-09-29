@@ -1,14 +1,16 @@
 ---
-title: "Assignment 3"
+  title: "Assignment 3"
 author: "Charles Lang"
 date: "February 13, 2016"
+output: pdf_document
 ---
-##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
-
-##First, you need to import into R a data set containing information about Charles' activity for the last three weeks. You can find this data set within the Assignment 3 repository you cloned to create this project.
-
-##Install packages for manipulating data
-We will use two packages: tidyr and dplyr
+  ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
+  
+  ##First, you need to import into R a data set containing information about Charles' activity for the last three weeks. You can find this data set within the Assignment 3 repository you cloned to create this project.
+  
+  
+  ##Install packages for manipulating data
+  We will use two packages: tidyr and dplyr
 ```{r}
 #Insall packages
 install.packages("tidyr", "dplyr")
@@ -18,7 +20,7 @@ library(tidyr, dplyr)
 
 ##Upload wide format instructor data (instructor_activity_wide.csv)
 ```{r}
-data_wide <- read.table("~/Documents/NYU/EDCT2550/Assignments/Assignment 3/instructor_activity_wide.csv", sep = ",", header = TRUE)
+data_wide <- read.table("C:/Users/Magdalena Bennett/Dropbox/PhD Columbia/Fall 2016/Core Methods in EDM/class7-master/instructor_activity_wide.csv", sep = ",", header = TRUE)
 
 #Now view the data you have uploaded and notice how its structure: each variable is a date and each row is a type of measure.
 View(data_wide)
@@ -31,8 +33,8 @@ View(data_wide)
 ##This is not a convenient format for us to analyze. What we need is for each type of measure to be a column. Your fisrt task is to convert wide format to long format data. To do this we will use the "gather" function: gather(data, time, variables)
 
 The gather command requires the following input arguments:
-
-- data: Data object
+  
+  - data: Data object
 - key: Name of new key column (made from names of data columns)
 - value: Name of new value column
 - ...: Names of source columns that contain values
@@ -47,8 +49,8 @@ View(data_long)
 ##Now convert this long format into separate columns using the "spread" function to separate by the type of measure
 
 The spread function requires the following input:
-
-- data: Data object
+  
+  - data: Data object
 - key: Name of column containing the new column names
 - value: Name of column containing values
 
@@ -59,6 +61,11 @@ instructor_data <- spread(data_long, variables, measure)
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
+data_stu_raw <- read.table("C:/Users/Magdalena Bennett/Dropbox/PhD Columbia/Fall 2016/Core Methods in EDM/class7-master/student_activity.csv", sep = ",", header = TRUE)
+
+View(data_stu_raw)
+
+student_data<-spread(data_stu_raw, variable, measure)
 
 ```
 
@@ -73,9 +80,9 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 ```
 
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
-
+  
 ```{r}
-
+student_data_3 <- dplyr::filter(student_data, table == 4)
 ```
 
 ##Make a new variable
@@ -87,25 +94,26 @@ instructor_data <- dplyr::mutate(instructor_data, total_sleep = s_deep + s_light
 ```
 
 Now, refering to the cheat sheet, create a data frame called "instructor_sleep" that contains ONLY the total_sleep variable. Write your code in the following code chunk:
-
+  
 ```{r}
-
+instructor_sleep<-dplyr::select(instructor_data,total_sleep)
 ```
 
 Now, we can combine several commands together to create a new variable that contains a grouping. The following code creates a weekly grouping variable called "week" in the instructor data set:
-
+  
 ```{r}
 instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
 ```
 
 Create the same variables for the student data frame, write your code in the code chunk below:
-```{r}
 
+```{r}
+student_data <- dplyr::mutate(student_data, week = dplyr::ntile(date, 3))
 ```
 
 ##Sumaraizing
 Next we will summarize the student data. First we can simply take an average of one of our student variables such as motivation:
-
+  
 ```{r}
 student_data %>% dplyr::summarise(mean(motivation))
 
@@ -115,9 +123,10 @@ student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
 ```
 
 Create two new data sets using this method. One that sumarizes average motivation for students for each week (student_week) and another than sumarizes "m_active_time" for the instructor per week (instructor_week). Write your code in the following chunk:
-
+  
 ```{r}
-
+student_week<-student_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
+instructor_week<-instructor_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
 ```
 
 ##Merging
@@ -125,13 +134,15 @@ Now we will merge these two data frames using dplyr.
 
 ```{r}
 merge <- dplyr::full_join(instructor_week, student_week, "week")
+names(merge)<-c("week","mean_act_time","mean_motiv")
 ```
 
 ##Visualize
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
-
+  
 ```{r}
-
+plot(merge$mean_act_time,merge$mean_motiv,xlim=c(5500,7000),ylim=c(1.5,1.9))
+cor.test(merge$mean_act_time,merge$mean_motiv)
 ```
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
