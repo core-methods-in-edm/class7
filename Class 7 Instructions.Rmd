@@ -18,7 +18,7 @@ library(tidyr, dplyr)
 
 ##Upload wide format instructor data (instructor_activity_wide.csv)
 ```{r}
-data_wide <- read.table("~/Documents/NYU/EDCT2550/Assignments/Assignment 3/instructor_activity_wide.csv", sep = ",", header = TRUE)
+data_wide <- read.table("~/R/class7/instructor_activity_wide.csv", sep = ",", header = TRUE)
 
 #Now view the data you have uploaded and notice how its structure: each variable is a date and each row is a type of measure.
 View(data_wide)
@@ -38,7 +38,7 @@ The gather command requires the following input arguments:
 - ...: Names of source columns that contain values
 
 ```{r}
-data_long <- gather(data_wide, date, variables)
+data_long <- tidyr::gather(data_wide, date, variables)
 #Rename the variables so we don't get confused about what is what!
 names(data_long) <- c("variables", "date", "measure")
 #Take a look at your new data, looks weird huh?
@@ -53,13 +53,15 @@ The spread function requires the following input:
 - value: Name of column containing values
 
 ```{r}
-instructor_data <- spread(data_long, variables, measure)
+instructor_data <- tidyr::spread(data_long, variables, measure)
 ```
 
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
-
+Student_Data_Wide <- read.table("~/R/class7/student_activity.csv", sep = ",", header = TRUE)
+Student_Data_Spread <- tidyr::spread(Student_Data_Wide, variable, measure)
+View(Student_Data_Spread)
 ```
 
 ##Now that you have workable student data set, subset it to create a data set that only includes data from the second class. 
@@ -69,13 +71,14 @@ To do this we will use the dplyr package (We will need to call dplyr in the comm
 Notice that the way we subset is with a logical rule, in this case date == 20160204. In R, when we want to say that something "equals" something else we need to use a double equals sign "==". (A single equals sign means the same as <-).
 
 ```{r}
-student_data_2 <- dplyr::filter(student_data, date == 20160204)
+student_data_Spread_filt1 <- dplyr::filter(Student_Data_Spread, date == 20160204)
+View(student_data_Spread_filt1)
 ```
 
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
-
+student_data_wide_class2_t4 <- dplyr::filter(student_data_Spread_filt1, table == 4)
 ```
 
 ##Make a new variable
@@ -89,7 +92,9 @@ instructor_data <- dplyr::mutate(instructor_data, total_sleep = s_deep + s_light
 Now, refering to the cheat sheet, create a data frame called "instructor_sleep" that contains ONLY the total_sleep variable. Write your code in the following code chunk:
 
 ```{r}
-
+instructor_sleep1 <- instructor+data$total_sleep
+instructor_sleep <- data.frame(instructor_sleep1)
+View(instructor_sleep)
 ```
 
 Now, we can combine several commands together to create a new variable that contains a grouping. The following code creates a weekly grouping variable called "week" in the instructor data set:
@@ -100,24 +105,26 @@ instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
 
 Create the same variables for the student data frame, write your code in the code chunk below:
 ```{r}
-
+sdata_wide <- dplyr::mutate(Student_Data_Spread, week = dplyr::ntile(date, 3))
+View(sdata_wide)
 ```
 
 ##Sumaraizing
 Next we will summarize the student data. First we can simply take an average of one of our student variables such as motivation:
 
 ```{r}
-student_data %>% dplyr::summarise(mean(motivation))
+Student_Data_Spread %>% dplyr::summarise(mean(motivation))
 
 #That isn't super interesting, so let's break it down by week:
 
-student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
+Student_Data_Spread %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
 ```
 
 Create two new data sets using this method. One that sumarizes average motivation for students for each week (student_week) and another than sumarizes "m_active_time" for the instructor per week (instructor_week). Write your code in the following chunk:
 
 ```{r}
-
+student_week <- sdata_wide %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
+instructor_week <- instructor_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
 ```
 
 ##Merging
@@ -125,13 +132,22 @@ Now we will merge these two data frames using dplyr.
 
 ```{r}
 merge <- dplyr::full_join(instructor_week, student_week, "week")
+names(merge)<-c("week","mean_active_time","mean_motivation")
 ```
 
 ##Visualize
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-
+plot(merge$mean_active_time,merge$mean_motivation,xlim=c(1000,10000),ylim=c(2,2))
+cor.test(merge$mean_active_time,merge$mean_motivation)
 ```
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
+
+##Alcoholic
+```{r}
+counts <- table(instructor_data$alcoholic_beverages)
+barplot(counts, main="Coping Distribution", 
+  	xlab="Number of 'help me forgets' to cope with students")
+```
