@@ -75,7 +75,7 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
-student_tab4<-dplyr::filter(student_data_2,table==4)
+student_tab4<-dplyr::filter(newstud,table==4)
 ```
 
 ##Make a new variable
@@ -89,7 +89,7 @@ instructor_data <- dplyr::mutate(instructor_data, total_sleep = s_deep + s_light
 Now, refering to the cheat sheet, create a data frame called "instructor_sleep" that contains ONLY the total_sleep variable. Write your code in the following code chunk:
 
 ```{r}
-
+instructor_sleep<-dplyr::transmute(instructor_data,total_sleep = s_deep + s_light )
 ```
 
 Now, we can combine several commands together to create a new variable that contains a grouping. The following code creates a weekly grouping variable called "week" in the instructor data set:
@@ -100,7 +100,7 @@ instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
 
 Create the same variables for the student data frame, write your code in the code chunk below:
 ```{r}
-
+student_data<-dplyr::mutate(newstud,week=dplyr::ntile(date, 3))
 ```
 
 ##Sumaraizing
@@ -117,7 +117,8 @@ student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
 Create two new data sets using this method. One that sumarizes average motivation for students for each week (student_week) and another than sumarizes "m_active_time" for the instructor per week (instructor_week). Write your code in the following chunk:
 
 ```{r}
-
+student_week<-student_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
+instructor_week<-instructor_data  %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
 ```
 
 ##Merging
@@ -131,7 +132,8 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-
+plot(instructor_week,student_week)
+cor.test(
 ```
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
