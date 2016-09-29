@@ -1,7 +1,8 @@
 ---
 title: "Assignment 3"
-author: "Charles Lang"
-date: "February 13, 2016"
+author: "Chuheng Hu"
+date: "Sep 28, 2016"
+output: word_document
 ---
 ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
 
@@ -10,20 +11,19 @@ date: "February 13, 2016"
 ##Install packages for manipulating data
 We will use two packages: tidyr and dplyr
 ```{r}
-#Insall packages
-install.packages("tidyr", "dplyr")
+
 #Load packages
-library(tidyr, dplyr)
+library(tidyr,dplyr)
 ```
 
 ##Upload wide format instructor data (instructor_activity_wide.csv)
 ```{r}
-data_wide <- read.table("~/Documents/NYU/EDCT2550/Assignments/Assignment 3/instructor_activity_wide.csv", sep = ",", header = TRUE)
+data_wide <-  read.table("~/Desktop/HUDK4050 Core mthds educ dara mining/RSTUDIO/CLASS 7/instructor_activity_wide.csv", sep = ",", header = TRUE)
 
 #Now view the data you have uploaded and notice how its structure: each variable is a date and each row is a type of measure.
 View(data_wide)
 
-#R doesn't like having variable names that consist only of numbers so, as you can see, every variable starts with the letter "X". The numbers represent dates in the format year-month-day.
+#R doesn't like having variable names that consist only of numbers so, as you can see, every variable starts with the letter "X". The numbers represent dates in the format year-month-day.#
 
 
 ```
@@ -40,7 +40,7 @@ The gather command requires the following input arguments:
 ```{r}
 data_long <- gather(data_wide, date, variables)
 #Rename the variables so we don't get confused about what is what!
-names(data_long) <- c("variables", "date", "measure")
+ names(data_long) <- c("variables", "date", "measure")
 #Take a look at your new data, looks weird huh?
 View(data_long)
 ```
@@ -59,6 +59,7 @@ instructor_data <- spread(data_long, variables, measure)
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
+student_data <- read.table("~/Desktop/HUDK4050 Core mthds educ dara mining/RSTUDIO/CLASS 7/student_activity.csv", sep = ",", header = TRUE)
 
 ```
 
@@ -75,6 +76,8 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
+student_activity_wide<- spread(student_data, variable, measure)
+student_t4<-dplyr::filter(student_activity_wide, table == 4)
 
 ```
 
@@ -89,7 +92,7 @@ instructor_data <- dplyr::mutate(instructor_data, total_sleep = s_deep + s_light
 Now, refering to the cheat sheet, create a data frame called "instructor_sleep" that contains ONLY the total_sleep variable. Write your code in the following code chunk:
 
 ```{r}
-
+instructor_sleep<-dplyr::select(instructor_data,total_sleep)
 ```
 
 Now, we can combine several commands together to create a new variable that contains a grouping. The following code creates a weekly grouping variable called "week" in the instructor data set:
@@ -100,7 +103,7 @@ instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
 
 Create the same variables for the student data frame, write your code in the code chunk below:
 ```{r}
-
+student_data <- dplyr::mutate(student_activity_wide, week = dplyr::ntile(date, 3))
 ```
 
 ##Sumaraizing
@@ -117,7 +120,8 @@ student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
 Create two new data sets using this method. One that sumarizes average motivation for students for each week (student_week) and another than sumarizes "m_active_time" for the instructor per week (instructor_week). Write your code in the following chunk:
 
 ```{r}
-
+student_week<-student_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
+instructor_week<-instructor_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
 ```
 
 ##Merging
@@ -131,7 +135,10 @@ merge <- dplyr::full_join(instructor_week, student_week, "week")
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-
+plot(instructor_week,student_week)
+a <- as.numeric(unlist(instructor_week[,2]))
+b <- as.numeric(unlist(student_week[,2]))
+cor.test(a,b)
 ```
 
-Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
+finally save your markdown document and your plot to this folder and commit,push and pull your repo to submit.
