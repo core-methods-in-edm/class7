@@ -59,7 +59,12 @@ instructor_data <- spread(data_long, variables, measure)
 ##Now we have a workable instructor data set!The next step is to create a workable student data set. Upload the data "student_activity.csv". View your file once you have uploaded it and then draw on a piece of paper the structure that you want before you attempt to code it. Write the code you use in the chunk below. (Hint: you can do it in one step)
 
 ```{r}
-
+student_data_wide <- read.table("/Users/davidnitkin/Dropbox (Personal)/Github/Class 7 Assignment/student_activity.csv", sep = ",", header = TRUE)
+#this was the command I used to upload the data
+View(student_data_wide)
+#this was the command I used to view the data once I had uploaded it
+> student_data_cleaned <- spread(student_data_wide, variable, measure)
+#this was the command I used to create separate columns for each variable
 ```
 
 ##Now that you have workable student data set, subset it to create a data set that only includes data from the second class. 
@@ -75,7 +80,7 @@ student_data_2 <- dplyr::filter(student_data, date == 20160204)
 Now subset the student_activity data frame to create a data frame that only includes students who have sat at table 4. Write your code in the following chunk:
 
 ```{r}
-
+table_4 <- dplyr::filter(student_data_2, table == 4)
 ```
 
 ##Make a new variable
@@ -89,7 +94,7 @@ instructor_data <- dplyr::mutate(instructor_data, total_sleep = s_deep + s_light
 Now, refering to the cheat sheet, create a data frame called "instructor_sleep" that contains ONLY the total_sleep variable. Write your code in the following code chunk:
 
 ```{r}
-
+instructor_total_sleep <- dplyr::select(instructor_data, date, total_sleep)
 ```
 
 Now, we can combine several commands together to create a new variable that contains a grouping. The following code creates a weekly grouping variable called "week" in the instructor data set:
@@ -100,7 +105,7 @@ instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
 
 Create the same variables for the student data frame, write your code in the code chunk below:
 ```{r}
-
+student_data_cleaned <- dplyr::mutate(student_data_cleaned, week = dplyr::ntile(date, 3))
 ```
 
 ##Sumaraizing
@@ -117,6 +122,11 @@ student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation))
 Create two new data sets using this method. One that sumarizes average motivation for students for each week (student_week) and another than sumarizes "m_active_time" for the instructor per week (instructor_week). Write your code in the following chunk:
 
 ```{r}
+student_week <- student_data_cleaned %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation))
+#this creates the student file
+
+instructor_week <- instructor_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
+#this creates the instructor file
 
 ```
 
@@ -124,14 +134,15 @@ Create two new data sets using this method. One that sumarizes average motivatio
 Now we will merge these two data frames using dplyr. 
 
 ```{r}
-merge <- dplyr::full_join(instructor_week, student_week, "week")
+merge <- dplyr::full_join(instructor_week, student_week, week)
 ```
 
 ##Visualize
 Visualize the relationship between these two variables (mean motivation and mean instructor activity) with the "plot" command and then run a Pearson correlation test (hint: cor.test()). Write the code for the these commands below:
 
 ```{r}
-
+plot(merge$"mean(m_active_time)", merge$"mean(motivation)", xlab="Average Instructor Time", ylab="Average Student Motivation", main = "Instructor Active Time vs. Motivation")
+cor.test(merge$"mean(m_active_time)", merge$"mean(motivation)")
 ```
 
 Fnally save your markdown document and your plot to this folder and comit, push and pull your repo to submit.
