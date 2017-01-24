@@ -16,7 +16,7 @@ We will use two packages: tidyr and dplyr
 library(tidyr,dplyr)
 ```
 
-##Upload wide format instructor data (instructor_activity_wide.csv)
+##Upload wide format instructor data (instructor_activity_wide.csv)vhvhj
 ```{r}
 data_wide <-  read.table("~/Desktop/HUDK4050 Core mthds educ dara mining/RSTUDIO/CLASS 7/instructor_activity_wide.csv", sep = ",", header = TRUE)
 
