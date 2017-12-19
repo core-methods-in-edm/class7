@@ -1,8 +1,11 @@
-library---
-title: "Assignment 3"
-author: "Charles Lang"
-date: "February 13, 2016"
 ---
+title: Tidyr-DplyrToTidyData
+author: Charles Lang and Shreya Goel
+date: February 13, 2016
+Data Rights: Charles Lang
+---
+
+
 ##In this assignment you will be practising data tidying. You will be using the data we have collected from class and data generated from the instructor wearing a wristband activity tracker.
 
 ##First, you need to import into R a data set containing information about Charles' activity for the last three weeks. You can find this data set within the Assignment 3 repository you cloned to create this project.
