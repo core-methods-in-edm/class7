@@ -1,3 +1,4 @@
-# Tidyr and Dplyr for Data Tidying
+# TIDYR and DPLYR
 
-Learning to tidy the data using tidyr and dplyr in R.
+Packages used: "tidyr" and "dplyr"
+Activity to Manipulate and tidy data using the 2 packages
