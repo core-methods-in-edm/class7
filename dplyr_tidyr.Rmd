@@ -1,0 +1,72 @@
+---
+title: tidyr and dplyr to tidy data
+author: Charles Lang
+sub author: Shreya Goel
+date: February 13, 2016
+Data Rights: Charles Lang
+---
+
+Data used was collected from the class and data generated from the instructor wearing a wristband activity tracker.
+
+```{r Install the packages}
+install.packages("tidyr", "dplyr")
+library(tidyr, dplyr) #Load packages
+```
+
+```{r Read the Instructor Data}
+data_wide <- read.table(".../instructor_activity_wide.csv", sep = ",", header = TRUE)
+```
+
+```{r Data manipulation - Instructor Data}
+data_long <- gather(data_wide, date, variables)
+names(data_long) <- c("variables", "date", "measure")
+instructor_data <- spread(data_long, variables, measure)
+```
+
+```{r Student Data}
+student_data <- read.table(".../student_activity.csv", sep = ",", header = TRUE)
+student_data <- spread(student_data, variable, measure)
+```
+
+```{r Filter data from second class}
+student_data_2 <- dplyr::filter(student_data, date == 20160204)
+```
+
+```{r Filter/Subset the data which includes only those students who are at table #4}
+student_data_3 <- dplyr::filter(student_data, table == 4)
+```
+
+```{r Add new Features/Variables}
+instructor_data <- dplyr::mutate(instructor_data, total_sleep = s_deep + s_light)
+```
+
+```{r Select the total sleep variable}
+instructor_sleep <- dplyr::select(instructor_data, total_sleep)
+```
+
+```{r create a new variable that groups data}
+instructor_data <- dplyr::mutate(instructor_data, week = dplyr::ntile(date, 3))
+```
+
+```{r Manipulating the Student Data}
+student_data <- dplyr::mutate(student_data, week = dplyr::ntile(date, 3))
+```
+
+```{r Summarize Student Data}
+student_data %>% dplyr::summarise(mean(motivation))
+student_data %>% dplyr::group_by(date) %>% dplyr::summarise(mean(motivation)) # Breaking down the data by week
+```
+
+```{r Group Data by Week}
+student_week <- student_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(motivation)) #group by weeks
+instructor_week <- instructor_data %>% dplyr::group_by(week) %>% dplyr::summarise(mean(m_active_time))
+```
+
+```{r Merge the data}
+merge <- dplyr::full_join(instructor_week, student_week, "week")
+```
+
+```{r Visualize the data}
+plot(merge$`mean(m_active_time)`, merge$`mean(motivation)`)
+cor.test(merge$`mean(m_active_time)`, merge$`mean(motivation)`)
+```
